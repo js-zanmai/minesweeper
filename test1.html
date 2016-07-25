@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<!-- Utility Module -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+	<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/start/jquery-ui.css" rel="stylesheet">
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+
+	<style type="text/css">
+		table {
+			background-color: #ffffff;
+			border-top:#ffffff 3px double;
+			border-collapse: collapse;
+			font-size: 11px;
+			width: 400px;
+			color:#333333;
+		} 
+		table th.t_top {
+			border-bottom: #dcdddd 1px solid;
+			background-color: #efefef;
+			text-align: center;
+			padding: 10px;
+		} 
+		table td.t_line01 {
+			background-color: #fff;
+			text-align: center;
+			padding: 10px;
+			vertical-align: top;
+		}
+		table td.t_line02 {
+			background-color: #f7f8f8;
+			text-align: center;
+			padding: 10px;
+			vertical-align: top;
+		}
+	</style>
+
+	<script>
+
+		// 警告ダイアログの表示
+		function ShowAlertDialog() {
+			alert("これは警告ダイアログです");
+		}
+				
+		// 確認ダイアログの表示
+		function ShowConfirmDialog() {
+			if (confirm("これは確認ダイアログです。")) {
+				alert("OKボタンがクリックされました");
+			} else {
+				alert("キャンセルボタンがクリックされました");
+			}
+		}
+		
+		// 文字入力ダイアログの表示
+		function ShowInputDialog() {
+			var ret;
+			ret = prompt("これは文字入力ダイアログです。入力した文字が表示されます。", "初期入力されている文字列です");
+			if (ret==null) {
+				alert("キャンセルボタンがクリックされました");
+			} else {
+				alert("入力された文字は「" + ret + "」です。");
+			}
+		}
+		
+		// 警告ダイアログの表示（JQuery）
+		function ShowJQueryAlertDialog() {
+			var strTitle = "警告ダイアログ";
+			var strComment = "ダイアログのメッセージ\nダイアログを閉じるためにはOKをクリックするか、右上の×ボタンをクリックしてください。";
+			
+			// ダイアログのメッセージを設定
+			$( "#show_dialog" ).html( strComment );
+
+			// ダイアログを作成
+			$( "#show_dialog" ).dialog({
+				modal: true,
+				title: strTitle,
+				buttons: {
+					"OK": function() {
+						$( this ).dialog( "close" );
+					}
+				}
+			});
+		}
+		
+		// 確認ダイアログの表示(JQuery)
+		function ShowJQueryConfirmDialog() {
+			var strTitle = "確認ダイアログ";
+			var strComment = "これは確認ダイアログです。";
+			
+			// ダイアログのメッセージを設定
+			$( "#show_dialog" ).html( strComment );
+			
+			// ダイアログを作成
+			$( "#show_dialog" ).dialog({
+				modal: true,
+				title: strTitle,
+				buttons: {
+					"OK": function() {
+						$( this ).dialog( "close" );
+						ShowJQueryMessageDialog( "OKがクリックされました" );
+					},
+					"キャンセル": function() {
+						$( this ).dialog( "close" );
+						ShowJQueryMessageDialog( "キャンセルがクリックされました" );
+					}
+				}
+			});
+		}
+
+		// 確認ダイアログの表示(JQuery)：ボタンのデフォルトフォーカスを変更
+		function ShowJQueryConfirmDialog_focus() {
+			var strTitle = "確認ダイアログ";
+			var strComment = "これは確認ダイアログ（ボタンのフォーカスを変更しています）です。";
+			
+			// ダイアログのメッセージを設定
+			$( "#show_dialog" ).html( strComment );
+			
+			// ダイアログを作成
+			$( "#show_dialog" ).dialog({
+				modal: true,
+				title: strTitle,
+				buttons: {
+					"OK": function() {
+						$( this ).dialog( "close" );
+						ShowJQueryMessageDialog( "OKがクリックされました" );
+					},
+					"キャンセル": function() {
+						$( this ).dialog( "close" );
+						ShowJQueryMessageDialog( "キャンセルがクリックされました" );
+					}
+				},
+				open: function() {						// キャンセルボタンにフォーカスをあてる
+					$( this ).siblings('.ui-dialog-buttonpane').find('button:eq(1)').focus();
+				}
+			});
+		}
+
+		
+		// 文字入力ダイアログの表示(JQuery)
+		function ShowJQueryInputDialog() {
+			var strTitle = "文字入力ダイアログ";
+			var strComment = "これは文字入力ダイアログです。";
+			
+			// ダイアログのメッセージを設定
+			$( "#show_dialog" ).html( '<p>' + strComment + '</p><input type="text" name="inputtxt" id="inputtxt" value="初期入力されている文字列です" />' );
+
+			// ダイアログを作成
+			$( "#show_dialog" ).dialog({
+				modal: true,
+				title: strTitle,
+				buttons: {
+					"OK": function() {
+						$( this ).dialog( "close" );
+						ShowJQueryMessageDialog("入力された文字は「" + $( "#inputtxt" ).val() + "」です。");
+					},
+					"キャンセル": function() {
+						$( this ).dialog( "close" );
+						ShowJQueryMessageDialog( "キャンセルがクリックされました" );
+					}
+				}
+			});
+		}
+
+		// メッセージダイアログの表示(JQuery)
+		function ShowJQueryMessageDialog( strComment ) {
+			var strTitle = "メッセージダイアログ";
+			
+			// ダイアログのメッセージを設定
+			$( "#show_dialog" ).html( strComment );
+
+			// ダイアログを作成
+			$( "#show_dialog" ).dialog({
+				modal: true,
+				title: strTitle,
+				buttons: {
+				}
+			});
+		}
+
+	</script>
+
+
+	<TITLE>Dialog Test</TITLE>
+</head>
+<body>
+	<table>
+	<tr>
+		<th class="t_top">ダイアログパターン</th><th class="t_top">通常のダイアログ</th><th class="t_top">JQueryを使ったダイアログ</th>
+	</tr>
+	<tr>
+		<td class="t_line01">警告ダイアログ：</td>
+		<td class="t_line01" align="center"><button onclick="ShowAlertDialog();">ダイアログ表示</button></td>
+		<td class="t_line01" align="center"><button onclick="ShowJQueryAlertDialog();">ダイアログ表示</button></td>
+	</tr>
+	<tr>
+		<td class="t_line02">確認ダイアログ：</td>
+		<td class="t_line02" align="center"><button onclick="ShowConfirmDialog();">ダイアログ表示</button></td>
+		<td class="t_line02" align="center"><button onclick="ShowJQueryConfirmDialog();">ダイアログ表示</button></td>
+	</tr>
+	<tr>
+		<td class="t_line01">文字入力ダイアログ：</td>
+		<td class="t_line01" align="center"><button onclick="ShowInputDialog();">ダイアログ表示</button></td>
+		<td class="t_line01" align="center"><button onclick="ShowJQueryInputDialog();">ダイアログ表示</button></td>
+	</tr>
+	</table>
+
+	<table>
+	<tr>
+		<th class="t_top">ダイアログパターン</th><th class="t_top">デフォルトフォーカスのダイアログ</th><th class="t_top">フォーカスを変更したダイアログ</th>
+	</tr>
+	<tr>
+		<td class="t_line02">確認ダイアログ：</td>
+		<td class="t_line02" align="center"><button onclick="ShowJQueryConfirmDialog();">ダイアログ表示</button></td>
+		<td class="t_line02" align="center"><button onclick="ShowJQueryConfirmDialog_focus();">ダイアログ表示</button></td>
+	</tr>
+	</table>
+
+	<div id="show_dialog"></div>
+
+</body>
+</html>
