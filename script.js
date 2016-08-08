@@ -5,19 +5,44 @@ function main(){
   HEIGHT = 30;
   BOM_LOCATION_FLAG="B";
   NON_BOM_LOCATION_FLAG="NB";
+  CONTROLE_LOCATION_ROW=3;
   tileCount = null;
   tiles = {};
   tileElement = {}; 
+  isStart = true;
+  $('#level').change(function(){
+    $('#r1').html($(this).val());
+    var lev = $('#level').val();
+    if(lev === "high"){
+     	initWithLevel(30,16);
+     	isStart = true;
+     	return;
+    }else if(lev === "mid"){
+    	initWithLevel(16,16);
+    	isStart = true;
+    	return;
+    }else{
+    	initWithLevel(9,9);
+    	isStart = true;
+    	return;
+    }
+  });
   init();
 }
 
+function initWithLevel(wid,hei) {
+MAX_WIDTH = wid;
+MAX_HEIGHT=hei;
+init();
+}
 function init() {
   tileCount = MAX_WIDTH * MAX_HEIGHT;
   var pane = document.getElementById('pane');
+  //var pane = top.f1.document.getElementById('pane');
   for (var i = 0; i < MAX_WIDTH; i++) {
     tiles[i] = {};
     tileElement[i] = {};
-    for(var j = 0; j < MAX_HEIGHT; j++) {
+    for(var j = CONTROLE_LOCATION_ROW; j < MAX_HEIGHT+CONTROLE_LOCATION_ROW; j++) {
       tiles[i][j] = 0;
       var tile = document.createElement('div');
       tile.style.backgroundColor = '#ccf';
@@ -41,15 +66,14 @@ function init() {
 }
   
 function selectTile(i, j, isClick, orgI, orgJ) {
+  if(isStart && isClick){
+  	isStart = false;
+  	$('#start').click();
+  }
   if (isClick && tiles[i][j] === BOM_LOCATION_FLAG) {
     displayAllBoms();
-   // var f = ShowJQueryConfirmDialog();
-    //if(f){
-    //  init();
-    // }
-    if (confirm("!!GAME ORVER!! リスタートしますか？")) {
-      init();
-    }
+    $('#stop').click();
+    showGameOverDialog()
     return false;
   } else if (tiles[i][j] == NON_BOM_LOCATION_FLAG) {
     return false;
@@ -117,11 +141,36 @@ function setActionForDisplayCompStage(n, m,tile) {
   var isClear = selectTile(n, m, true, n, m);
     if (isClear) {
           alert('You did it !!');
+          
           init();
     }
   }
 }
 
+		function showGameOverDialog() {
+			var strTitle = "ゲームオーバー";
+			var strComment = "ゲームもう一回やります？";
+			
+			// ダイアログのメッセージを設定
+			$( "#confirm" ).html( strComment );
+			isStart = true;
+			// ダイアログを作成
+			$( "#confirm" ).dialog({
+				modal: true,
+				title: strTitle,
+				buttons: {
+					"リトライ": function() {
+						$( this ).dialog( "close" );
+						
+						init();
+						//initWithLevel(16,16);
+					}
+				}
+			});
+		}
 
 $(document).ready(main);
 //window.onload=main;
+
+
+$('#r1').html($('#level').val());
